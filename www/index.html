@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html class="ui-mobile-rendering">
+<head>
+  <title>Jquery Mobile-Backbone-PhoneGap-By-Dhanu Gupta</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="lib/jquery.mobile/jquery-mobile-min.css"/>
+  <link rel="stylesheet" href="lib/ios_inspired/styles.css"/>
+  <link rel="stylesheet" href="css/styles.css"/>
+ <style>
+    .card {border:2px solid blue; padding:10px;}
+    .card img { width:200px; height:200px;}
+    .autogrow {width:200px;}
+</style>
+    
+  <!-- Libraries -->
+  <script src="lib/jquery-1.9.1.js"></script>
+  <script src="js/jqm-config.js"></script> <!-- jQuery Mobile config should be loaded after jQuery and before jQuery Mobile -->
+  <script src="lib/jquery.mobile/jquery-mobile-1.3.0.js"></script>
+</head>
+
+
+<script src="lib/underscore.js"></script>
+<script src="lib/backbone.js"></script>
+  
+    <script src="lib/jquery.jeditable.mini.js"></script>
+    <script>$.editable.addInputType('autogrow', {
+    element : function(settings, original) {
+        var textarea = $('<textarea />');
+        if (settings.rows) {
+            textarea.attr('rows', settings.rows);
+        } else {
+            textarea.height(settings.height);
+        }
+        if (settings.cols) {
+            textarea.attr('cols', settings.cols);
+        } else {
+            textarea.width(settings.width);
+        }
+        $(this).append(textarea);
+        return(textarea);
+    },
+    plugin : function(settings, original) {
+        $('textarea', this).autogrow(settings.autogrow);
+    }
+});</script>
+    <script src="lib/jquery.autogrow.js"></script>
+  <!-- Config -->
+  <script src="js/app-config.js"></script>
+
+  <!-- Template loader -->
+  <script src="js/template-loader.js"></script>
+
+
+    <body id="deviceready"></body>
+    
+      <!-- SMA models and views -->
+ <script src="js/model/products.js"></script>
+ <script src="js/view/home-page.js"></script>
+<script src="js/view/about-page.js"></script>    
+ <script src="js/view/card-home.js"></script>
+ <script src="js/view/card-details.js"></script>
+ <script src="js/view/card-preview.js"></script>
+
+  <script type="text/javascript" src="cordova.js"></script>    
+  <!-- SMA main file and router -->
+  <script src="js/main.js"></script>
+
+  <!-- Templates. -->
+  <script type="text/html" class="template" id="home-page">
+    <div data-role="header">
+      <h1>Jquery Mobile/Backbone</h1>  
+      <h2>E-Greeting</h2>
+      <a href="#about" data-theme="a">About</a>
+    </div>
+
+    <div data-role="content">
+     <ul data-role="listview"></ul>
+    </div>
+    <div data-role="footer">
+     
+     <p>Prototype: Dhanu Gupta</p>
+    </div>
+  </script> 
+
+     <script type="text/html" class="template" id="card-content">
+    <div class="ui-btn-inner ui-li">
+      <div class="ui-btn-text card">
+        <a class="ui-link-inherit" href="#card/<%= id %>">
+          <%= title %>
+          <br><img src="<%= image %>" />
+        </a>
+      </div>
+    </div>
+  </script>
+    
+      <script type="text/html" class="template" id="home-content">
+    <div class="ui-btn-inner ui-li">
+      <div class="ui-btn-text">
+        <a class="ui-link-inherit" href="#product/<%= id %>/amazon">
+          <%= title %>
+          <br><small><%= created %></small>
+        </a>
+      </div>
+    </div>
+  </script>
+ 
+     <script type="text/html" class="template" id="alert-content">
+        SOMETHING WENT WRONG !!!! 
+  </script>
+    <script type="text/html" class="template" id="sendEmail">
+    <div data-role="header">
+      <h1>Send Email</h1>
+      <a href="#" class="back" data-rel="back" data-theme="a">Back</a>
+      <a href="#about" data-theme="a">About</a>
+    </div>
+
+    <div data-role="content">
+      <div class="content">
+        SEND EMAIL 
+    </div>
+    </div>
+
+    </div>
+  </script>    
+    
+     <script type="text/html" class="template" id="card-details-page">
+    <div data-role="header">
+      <h1>Card Details</h1>
+      <a href="#" class="back" data-rel="back" data-theme="a">Back</a>
+      <a href="#about" data-theme="a">About</a>
+    </div>
+
+    <div data-role="content" class="card-details"></div>
+
+    <div data-role="footer" data-position="fixed">
+      <div data-role="navbar" data-theme="a">
+        <ul>
+          <li><a href="#cardPreview/<%= id%>" id="sendemail-button" data-icon="custom" class="ui-btn-active">CARD PREVIEW</a></li>
+          <li><a href="#product/sendText" id="sendtext-button" data-icon="custom">Nothing</a></li>
+        </ul>
+      </div>
+    </div>
+  </script>  
+    
+     <script type="text/html" class="template" id="card-details">
+   <div class="ui-btn-inner ui-li">
+      <div class="ui-btn-text">
+          <%= title %>
+          <p class="autogrow">Edit Text</p>
+          <img src="<%= image %>"  />      
+    
+      </div>
+    </div>
+  </script>
+        <script type="text/html" class="template" id="card-preview-page">
+    <div data-role="header">
+      <h1>PreView Card</h1>
+      <a href="#" class="back" data-rel="back" data-theme="a">Back</a>
+      <a href="#about" data-theme="a">About</a>
+    </div>
+
+    <div data-role="content" class="card-details">
+    <p class="editText"></p>
+    <img src="<%= image %>" />
+    </div>
+
+    <div data-role="footer" data-position="fixed">
+      <div data-role="navbar" data-theme="a">
+        <ul>
+          <li><a href="#product/sendText" id="sendtext-button" data-icon="custom">NOTHING</a></li>
+        </ul>
+      </div>
+    </div>
+  </script>  
+
+     <script type="text/html" class="template" id="about-page">
+    <div data-role="header">
+      <h1>About Application</h1>
+      <a href="#" class="back" data-rel="back" data-theme="a">Back</a>
+    </div>
+
+    <div data-role="content">
+       <ul> Features:</ul>
+        <li>#1: Jquery Mobile </li>
+        <li>#2: Backbone js/Underscore</li>
+        <li>#3. Backbone Router Implementation</li>
+        <li>#4. PhoneGap Compatible</li>
+        <li>#5. SINGLE Page Application</li>
+        </ul>
+    </div>
+
+    <div data-role="footer">
+      <p>Prototype: Dhanu Gupta</p>
+    </div>
+  </script>
+    
+    <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-18373046-6', 'dhanugupta.com');
+  ga('send', 'pageview');
+
+</script>
+</html>
